@@ -1,0 +1,32 @@
+{
+  "name": "typescript-boilerplate",
+  "version": "1.0.0",
+  "description": "Boiler plate code for a node + typescript project",
+  "main": "index.js",
+  "dependencies": {
+    "gulp-concat": "^2.6.1",
+    "gulp": "^3.9.1",
+    "gulp-sourcemap": "^1.0.1",
+    "gulp-typescript": "^3.2.3",
+    "ts-node": "^4.1.0",
+    "tslint-microsoft-contrib": "^5.0.1",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
+  },
+  "devDependencies": {
+    "mocha": "^4.1.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/origox/node-typescript-boilerplate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/origox/node-typescript-boilerplate/issues"
+  },
+  "homepage": "https://github.com/origox/node-typescript-boilerplate#readme"
+}
