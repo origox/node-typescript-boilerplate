@@ -2,6 +2,7 @@ var gulp = require('gulp')
 var tsc = require('gulp-typescript')
 var del = require('del')
 var concat = require('gulp-concat')
+var mocha = require('gulp-mocha');
 var sourcemaps = require('gulp-sourcemaps')
 var path = require('path')
 var spawn = require('child_process').spawn
@@ -28,6 +29,13 @@ gulp.task('build', ['copyconfig'], function () {
         }))
         .pipe(gulp.dest('dist'))
 })
+
+// run mocha tests in the ./tests folder
+gulp.task('test', function () {
+    return gulp.src('./tests/out/test*.js', { read: false })
+    // gulp-mocha needs filepaths so you can't have any plugins before it
+        .pipe(mocha());
+});
 
 gulp.task('server', ['build'], function () {
   if (node) node.kill()
