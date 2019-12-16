@@ -14,56 +14,51 @@ gulp.task('clean', function (cb) {
   return del('dist', cb)
 })
 
-gulp.task('copyconfig', ['clean'], function () {
-  gulp.src('src/*.json')
-        .pipe(gulp.dest('./dist'))
-})
-
-gulp.task('build', ['copyconfig'], function () {
+gulp.task('build', function () {
   var tsResult = gulp.src(['typings/index.d.ts', 'src/**/*.ts'])
-        .pipe(sourcemaps.init())
-        .pipe(tsProject())
-        return tsResult.js
-        .pipe(sourcemaps.write('.', {
-          sourceRoot: function (file) { return file.cwd + '/src' }
-        }))
-        .pipe(gulp.dest('dist'))
+    .pipe(sourcemaps.init())
+    .pipe(tsProject())
+  return tsResult.js
+    .pipe(sourcemaps.write('.', {
+      sourceRoot: function (file) { return file.cwd + '/src' }
+    }))
+    .pipe(gulp.dest('dist'))
 })
 
 // run mocha tests in the ./tests folder
 gulp.task('test', function () {
-    return gulp.src('./tests/out/test*.js', { read: false })
+  return gulp.src('./tests/out/test*.js', { read: false })
     // gulp-mocha needs filepaths so you can't have any plugins before it
-        .pipe(mocha());
+    .pipe(mocha());
 });
 
-gulp.task('server', ['build'], function () {
+gulp.task('server', gulp.series('build', function () {
   if (node) node.kill()
-    node = spawn('node', ['dist/index.js'], { stdio: 'inherit' })
+  node = spawn('node', ['dist/index.js'], { stdio: 'inherit' })
   node.on('close', function (code) {
-      if (code === 8) {
-          gulp.log('Error detected, waiting for changes...')
-        }
-    })
-})
-
-gulp.task('debug', ['watch'], function () {
-  if (node) node.kill()
-    node = spawn('node', ['--inspect-brk=0.0.0.0:9229', '--nolazy', 'dist/index.js'], { stdio: 'inherit' })
-  node.on('close', function (code) {
-      if (code === 8) {
-          gulp.log('Error detected, waiting for changes...')
-        }
-    })
-})
+    if (code === 8) {
+      gulp.log('Error detected, waiting for changes...')
+    }
+  })
+}))
 
 gulp.task('watch', function () {
-  gulp.watch('src/**/*.ts', ['server'])
+  gulp.watch('src/**/*.ts', gulp.series('server'))
 })
 
-gulp.task('default', ['build'])
-
-// clean up if an error goes unhandled.
-process.on('exit', function () {
+gulp.task('debug', gulp.series('watch', function () {
   if (node) node.kill()
-})
+  node = spawn('node', ['--inspect-brk=0.0.0.0:9229', '--nolazy', 'dist/index.js'], { stdio: 'inherit' })
+  node.on('close', function (code) {
+    if (code === 8) {
+      gulp.log('Error detected, waiting for changes...')
+    }
+  })
+}))
+
+gulp.task('default', gulp.series('build', function () {
+  // clean up if an error goes unhandled.
+  process.on('exit', function () {
+    if (node) node.kill()
+  })
+}))

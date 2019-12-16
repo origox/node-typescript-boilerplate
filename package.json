@@ -14,7 +14,7 @@
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-mocha": "^7.0.2",
-    "gulp-sourcemap": "^1.0.1",
+    "gulp-sourcemaps": "^1.0.1",
     "gulp-typescript": "^5.0.1",
     "mocha": "^6.2.2",
     "ts-node": "^8.5.4",
@@ -23,7 +23,7 @@
     "typescript": "^3.7.3"
   },
   "scripts": {
-    "test": "mocha --reporter spec --compilers ts:ts-node/register src/test/**/*.test.ts",
+    "test": "mocha -r ts-node/register src/test/**/*.test.ts",
     "start": "gulp server",
     "dev": "gulp watch",
     "debug": "gulp debug"
